@@ -1,0 +1,76 @@
+﻿@using Microsoft.AspNetCore.Builder
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Options
+@using CoordinatorSmikServer.Models;
+@using CoordinatorSmikServer.Models.Enums;
+
+
+
+@model List<ProjectInfoViewModel>
+@inject IViewLocalizer  Localizer
+@inject IOptions<RequestLocalizationOptions> LocOptions
+@inject IHtmlLocalizer<ConstructionState> ConstructLocalizer
+@inject IHtmlLocalizer<SystemState> SystemtLocalizer
+
+
+
+
+
+
+
+<div class="projects">
+
+    @foreach (var project in Model)
+    {
+        <div class="item">
+            <a asp-action="Detail" asp-controller="Project" asp-route-id="@project.Id">
+
+
+                <div class="title">@project.Name</div>
+
+                <div class="photo">
+                    <img src="@project.Image.TitleImage" />
+                </div>
+                <div class="project-params">
+                    <div class="site-param">
+                        <div class="site-param-name">
+                            <label class="site-param-name-label" asp-for="@project.ConstructionState"></label>
+                        </div>
+                        <div class="site-state-sign @ExtensionFunc.GetClassState(project.ConstructionState, "project-state-norma","project-state-warning","project-state-alarm","project-state-error")">
+                        </div>
+                        <div class="site-param-value">
+                            <span class="site-param-value-span">@ConstructLocalizer[ExtensionFunc.GetDisplayName(project.ConstructionState)]</span>
+                        </div>
+                    </div>
+
+                    <div class="site-param">
+                        <div class="site-param-name">
+                            <label class="site-param-name-label" asp-for="@project.SystemState"></label>
+                        </div>
+                        <div class="site-state-sign @ExtensionFunc.GetClassState(project.SystemState, "project-state-norma", "project-state-error","project-state-error")">
+                        </div>
+                        <div class="site-param-value">
+                            <span class="site-param-value-span">@SystemtLocalizer[ExtensionFunc.GetDisplayName(project.SystemState)]</span>
+                        </div>
+                    </div>
+
+                    <div class="site-param">
+                        <div class="site-param-name">
+                            <label class="site-param-name-label" asp-for="@project.UpdateDate"></label>
+                        </div>
+                        <div class="site-state-sign @ExtensionFunc.GetClassState(project?.UpdateDate?.ToLocalTime(), "project-state-norma", "project-state-error","project-state-error")">
+                        </div>
+                        <div class="site-param-value">
+                            <span class="site-param-value-span">@(project?.UpdateDate?.ToLocalTime().ToString() ?? Localizer["Неизвестно"].Value)</span>
+                        </div>
+                    </div>
+                </div>             
+            </a>
+        </div>
+    }
+
+</div>
+
+
+
+
